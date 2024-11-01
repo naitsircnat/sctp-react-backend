@@ -35,9 +35,9 @@ mysql -u root < schema.sql
 ```env
 PORT=3000
 DB_HOST=localhost
-DB_USER=your_username
-DB_PASSWORD=your_password
-DB_NAME=registration_db
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=react_ecommerce_db
 ```
 ### 4. Starting the Application
 
