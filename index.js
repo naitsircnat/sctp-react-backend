@@ -4,12 +4,16 @@ const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
 const { body, validationResult } = require('express-validator');
+require('dotenv').config();
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+console.log(process.env.DB_USER);
+console.log(process.env.DB_PASSWORD)
 
 // Database connection pool
 const pool = mysql.createPool({
