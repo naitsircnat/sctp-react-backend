@@ -26,7 +26,7 @@ const pool = mysql.createPool({
 const registerValidation = [
   body('name').trim().isLength({ min: 2 }).escape(),
   body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }),
+  body('password').isLength({ min: 4 }),
   body('confirmPassword').custom((value, { req }) => {
     if (value !== req.body.password) {
       throw new Error('Password confirmation does not match password');
@@ -35,8 +35,7 @@ const registerValidation = [
   }),
   body('salutation').isIn(['Mr', 'Ms', 'Mrs']),
   body('country').isIn(['sg', 'my', 'in', 'th']),
-  body('emailMarketing').isBoolean(),
-  body('smsMarketing').isBoolean()
+
 ];
 
 // Registration endpoint
