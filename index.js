@@ -1,10 +1,10 @@
 // app.js
-const express = require('express');
-const mysql = require('mysql2/promise');
-const bcrypt = require('bcrypt');
-const cors = require('cors');
-const { body, validationResult } = require('express-validator');
-require('dotenv').config();
+const express = require("express");
+const mysql = require("mysql2/promise");
+const bcrypt = require("bcrypt");
+const cors = require("cors");
+const { body, validationResult } = require("express-validator");
+require("dotenv").config();
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 console.log(process.env.DB_USER);
-console.log(process.env.DB_PASSWORD)
+console.log(process.env.DB_PASSWORD);
 
 // Database connection pool
 const pool = mysql.createPool({
@@ -23,27 +23,26 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
 });
 
 // Validation middleware
 const registerValidation = [
-  body('name').trim().isLength({ min: 2 }).escape(),
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 4 }),
-  body('confirmPassword').custom((value, { req }) => {
+  body("name").trim().isLength({ min: 2 }).escape(),
+  body("email").isEmail().normalizeEmail(),
+  body("password").isLength({ min: 4 }),
+  body("confirmPassword").custom((value, { req }) => {
     if (value !== req.body.password) {
-      throw new Error('Password confirmation does not match password');
+      throw new Error("Password confirmation does not match password");
     }
     return true;
   }),
-  body('salutation').isIn(['Mr', 'Ms', 'Mrs']),
-  body('country').isIn(['sg', 'my', 'in', 'th']),
-
+  body("salutation").isIn(["Mr", "Ms", "Mrs"]),
+  body("country").isIn(["sg", "my", "in", "th"]),
 ];
 
 // Registration endpoint
-app.post('/api/register', registerValidation, async (req, res) => {
+app.post("/api/register", registerValidation, async (req, res) => {
   try {
     // Check for validation errors
     const errors = validationResult(req);
@@ -58,7 +57,7 @@ app.post('/api/register', registerValidation, async (req, res) => {
       salutation,
       country,
       emailMarketing,
-      smsMarketing
+      smsMarketing,
     } = req.body;
 
     // Get database connection from pool
@@ -70,14 +69,14 @@ app.post('/api/register', registerValidation, async (req, res) => {
 
       // Check if email already exists
       const [existingUsers] = await connection.query(
-        'SELECT id FROM users WHERE email = ?',
+        "SELECT id FROM users WHERE email = ?",
         [email]
       );
 
       if (existingUsers.length > 0) {
         await connection.rollback();
         return res.status(400).json({
-          error: 'Email already registered'
+          error: "Email already registered",
         });
       }
 
@@ -102,10 +101,9 @@ app.post('/api/register', registerValidation, async (req, res) => {
       await connection.commit();
 
       res.status(201).json({
-        message: 'User registered successfully',
-        userId: userResult.insertId
+        message: "User registered successfully",
+        userId: userResult.insertId,
       });
-
     } catch (error) {
       // Rollback on error
       await connection.rollback();
@@ -114,11 +112,10 @@ app.post('/api/register', registerValidation, async (req, res) => {
       // Release connection back to pool
       connection.release();
     }
-
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     res.status(500).json({
-      error: 'An error occurred during registration'
+      error: "An error occurred during registration",
     });
   }
 });
@@ -127,7 +124,7 @@ app.post('/api/register', registerValidation, async (req, res) => {
 app.use((error, req, res, next) => {
   console.error(error);
   res.status(500).json({
-    error: 'Internal server error'
+    error: "Internal server error",
   });
 });
 
