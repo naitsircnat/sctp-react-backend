@@ -1,5 +1,7 @@
-USE react_ecommerce_db;
+CREATE DATABASE react_ecommerce_db;
 
+USE react_ecommerce_db;
+ 
 -- Create the users table
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
